@@ -1,0 +1,22 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  vars:
+    ansible_ssh_user: robin
+    name1: root
+    hosts_group: all
+
+  tasks:
+    - name: install openjdk by yum
+      shell: "echo y|yum install java"
+      async: 20
+      poll: 10
+      register: rst1
+
+    - name: echo rst1
+      debug:
+        msg: "{{ rst1 }}"

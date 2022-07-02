@@ -1,0 +1,20 @@
+pipeline{
+    agent { label 'cm-linux' }
+    triggers{ 
+      cron('H/10 * * * *')
+      pollSCM('*/11 * * * *')
+    }
+    parameters{
+      string(name: 'USERID2', defaultValue:'',description: 'input or select your userid')
+      string(name: 'USENAME2', defaultValue:'',description: 'input or select your username')
+    }
+    stages{
+        stage('Build'){
+            steps{
+              echo 'start to do Build'
+              sh 'whoami'
+              git 'https://github.com/byygyy/ansible-examples.git'
+            }
+        }
+    }
+}

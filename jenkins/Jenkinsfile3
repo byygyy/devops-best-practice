@@ -1,0 +1,19 @@
+node("cm-linux") {
+      properties([
+        pipelineTriggers([
+        ]),
+      parameters([
+        string(name:'NODENAME', defaultValue:'cm-linux', description:'input the node name'),
+        string(name:'USERID', defaultValue:'', description:'input or select your userid'),
+        string(name:'USERNAME', defaultValue:'', description:'input or select your username'),
+        password(name:'USERPASSWORD', defaultValue:'', description:'input or select your password'),
+        string(name:'EMAIL', defaultValue:'', description:'input or select your email'),
+        string(name:'ADDR', defaultValue:'', description:'input or select your email'),
+      ])
+    ])
+
+    stage('Build'){
+      echo 'I am doing the Test'
+sh label: '', script: 'curl -k -X POST -H "Content-Type: application/json" -H "Authorization: Bearer r4kE5hl59cgGitTJI35I4odSBfuqGX"   --data \'{"extra_vars":{ "ansible_remote_tmp": "/tmp/","remote_user": "wladm","hosts_group": "server1","shell_command": "ps -ef|grep weblogic","stdout_or_stdout_lines": "stdout_lines"}}\' https://192.168.3.8/api/v2/job_templates/7/launch/'
+    }
+}
