@@ -1,0 +1,3 @@
+docker build -t 'byygyy/chuanqiudzz' .
+docker login docker.io
+docker push byygyy/chuanqiudzz

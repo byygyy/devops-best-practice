@@ -1,0 +1,4 @@
+docker login docker.io
+docker pull byygyy/chuanqiudzz 
+docker run --name chuanqiudzz --restart=unless-stopped -idt -p 8080:8080 byygyy/chuanqiudzz 
+curl http://127.0.0.1:8080
