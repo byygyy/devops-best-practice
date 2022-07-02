@@ -1,0 +1,10 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: robin
+  vars:
+    hosts_group: "lhh.pub"
+    env_name_alias: "cn"
+  
+  roles:
+    - "test-ansible-python"

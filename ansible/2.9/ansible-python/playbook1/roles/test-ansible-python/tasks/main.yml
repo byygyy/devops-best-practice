@@ -1,0 +1,12 @@
+---
+
+- name: call py got result
+  shell: "python get.py"
+  args:
+    chdir: "./roles/test-ansible-python/scripts/" #ansible运行playbook的绝对位置是site.yml所在的位置，即playbook的入口。
+  register: "get_res1"
+  connection: local
+
+- debug:
+    msg: "{{ get_res1 }}"
+

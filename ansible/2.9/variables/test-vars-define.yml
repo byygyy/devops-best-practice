@@ -1,0 +1,95 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    userss: []
+    dict1: {"paramters":[{"name":robin,"age":22},{"name":tom,"age":21}]}
+
+    #user1 is defined and user1==None
+    user1:
+    
+    #user2 is defined and user2!=None and user2!=''
+    user2: jason
+    
+    #user3 is defined and user3==''
+    user3: ''
+
+  tasks:
+    - debug:
+        msg: "{{ dict1 }}"
+ 
+    - name: define a var1
+      shell: "whoami"
+      register: whoami
+
+    - debug:
+        msg: "whoami: {{ whoami }}"
+    
+    - debug:
+        msg: "whoami.stdout: {{whoami.stdout}}"
+
+    - name: define users in a loop
+      shell: "grep {{ item }} /etc/passwd|cat"
+      register: users
+      with_items:
+        - vagrant
+        - root
+        - nginx
+    
+    - name: show users
+      debug:
+        msg: "{{ users }}"
+
+    - name: show users.results
+      debug:
+        msg: "{{ users.results }}"
+
+    - name: define userss by set_fact
+      set_fact: 
+        userss: "{{userss +item.stdout_lines}}"
+      with_list: "{{ users.results }}"
+
+    - name: print userss
+      debug:
+        msg: "{{ userss }}"
+    
+    - name: print userss one by one
+      debug:
+        msg: "{{ item }}"
+      with_list: "{{ userss}}"
+
+    - name: print part of userss one by one
+      debug:
+        msg: "{{ item.split(':')[6] }}"
+      with_list: "{{ userss}}"
+
+    - name: show user1 defined but is None
+      debug:
+        msg: "user1 is {{ user1 }}"
+      when: user1 is defined and user1==None and user1!=''
+   
+    - name: show user2 defined and is not None and it is string
+      debug:
+        msg: "user2 is {{ user2 }}"
+      when: user2 is defined and user2!=None and user2!=''
+    
+    - name: show user3 defined and is not None but it is empty sting
+      debug:
+        msg: "user3 is {{ user3 }}"
+      when: user3 is defined and user3!=None and user3==''
+    
+    - name: show user4 which did not defined
+      debug:
+        msg: "user4 is not defined"
+      when: user4 is not defined

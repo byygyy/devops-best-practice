@@ -1,0 +1,14 @@
+[Unit]
+Description=elasticsearch
+After=multi-user.target
+After=network-online.target
+
+[Service]
+User=java_user
+Type=forking
+ExecStart=/bin/bash /apps/scripts/startElasticsearch
+ExecStop=/bin/bash /apps/scripts/stopElasticsearch
+TimeoutStartSec=1000s
+TimeoutStopSec=120s
+[Install]
+WantedBy=multi-user.target

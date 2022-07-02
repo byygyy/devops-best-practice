@@ -1,0 +1,15 @@
+###################################################################
+# cd /usr/lib/systemd/system
+# touch proxy.service
+[Unit]
+Description=proxy
+After=multi-user.target
+ 
+[Service]
+Type=idle
+ExecStart=/usr/bin/python /appvol/ProxyServer/proxyserver.py 11081
+PrivateTmp=true
+ 
+[Install]
+WantedBy=multi-user.target
+#####################################################################

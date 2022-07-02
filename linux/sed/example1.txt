@@ -1,0 +1,6 @@
+name=robin
+age=18
+cctv
+ok
+#here is the comment
+url=http://www.baidu.com

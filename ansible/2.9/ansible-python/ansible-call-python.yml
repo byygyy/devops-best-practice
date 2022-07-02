@@ -1,0 +1,36 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    hosts_group: "localhost"
+    env_name_alias: "cn"
+  tasks:
+    #注意，ansible寻找py文件，是从playbook的入口文件，即site.yml之类的文件开始。
+    - name: call py got result
+      shell: "python get.py"
+      args:
+        chdir: "./scripts/"
+      register: "get_res1"
+      connection: local
+
+    - debug:
+        msg: "{{ get_res1 }}"
+
+
+- hosts: "{{ hosts_group }}"
+  remote_user: robin
+  vars:
+    hosts_group: "lhh.pub"
+    env_name_alias: "cn"
+  tasks:
+    #注意，ansible寻找py文件，是从playbook的入口文件，即site.yml之类的文件开始。
+    - name: call py got result
+      shell: "python get.py"
+      args:
+        chdir: "./scripts/"
+      register: "get_res1"
+      connection: local
+
+    - debug:
+        msg: "{{ get_res1 }}"

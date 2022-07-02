@@ -1,0 +1,26 @@
+---
+# "ansible_password: password" save at ./group_vars/all
+# ansible-playbook -i "ec2-18-163-55-107.ap-east-1.compute.amazonaws.com," ./ansible-vault/ansible-windows.yml -e "hosts_group=all ansible_user='Administrator' ansible_port='5986' ansible_connection='winrm' ansible_winrm_transport=ntlm ansible_winrm_server_cert_validation=ignore ansible_winrm_read_timeout_sec=180 remote_user=Administrator env_name_alias=cn" --ask-vault-pass
+
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+
+  tasks:
+    - set_fact:
+        env_name: 'china'
+      when: env_name_alias=='zhonguo'
+
+    - set_fact:
+        env_name: 'china'
+      when: env_name_alias=='cn'
+
+    - set_fact:
+        env_name: "{{ env_name_alias }}"
+      when: env_name_alias not in ['zhonguo','cn']
+    
+    - debug:
+        msg: "env_name is {{ env_name }}"
+    
+    - debug:
+        msg: "env_name_alias is {{ env_name_alias }}"

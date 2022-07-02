@@ -1,0 +1,25 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: "{{ remotes_user }}"
+  vars:
+      hosts_group: 127.0.0.1
+      remotes_user: robin
+      #refert to these websit
+      ## https://stackoverflow.com/questions/39673842/is-possible-to-define-ansible-tmp-variable-in-playbook
+      ## https://stackoverflow.com/questions/60834326/q-ansible-dynamic-remote-tmp-with-inventory-hostname-possible-in-ansible-cfg
+      ## https://devops.stackexchange.com/questions/10703/ansible-temp-dir-change
+      
+      #best example
+      ## default value is:  remote_tmp  = ~/.ansible/tmp
+
+      ## first way to upgrade  default remote_tmp settings in the play below vars, it should only available for currecnt play
+      ansible_remote_tmp: /tmp/.ansible/tmp3
+
+      ## second way to override it by -e, it should available for all the play in the yml file
+      ## ansible-playbook test-vars-default-value.yml -e "ansible_remote_tmp=/tmp/.ansible/tmp4"
+
+  tasks:
+    - name: show the name
+      debug:
+         msg: "{{ ansible_remote_tmp }}"

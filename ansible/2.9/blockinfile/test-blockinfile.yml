@@ -1,0 +1,26 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    ages: [10,20,30]
+
+  tasks:
+    - name: modify some lines
+      blockinfile:
+        path: test.txt
+        insertafter: "^SELINUX="
+        marker: False
+        block: |
+         hello
+         world

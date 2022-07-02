@@ -1,0 +1,29 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    hosts_group: "localhost"
+    env_name_alias: "cn"
+  tasks:
+    - name: check if file/folder exists
+      stat:
+         path: "{{ item }}"
+      register: file_check_result
+      with_items:
+         - "/etc/file"
+         - "/appvol/"
+
+    - name: show file_check_result
+      debug:
+        msg: "{{ file_check_result }}"
+
+
+    - name: use set_fact to new var file_check_res1
+      set_fact:
+         file_check_res1: "{{ file_check_result.results | map(attribute='stat.exists')|list }}"
+
+
+    - debug:
+        msg: "{{ item }}"
+      with_items:  "{{file_check_res1 }}"

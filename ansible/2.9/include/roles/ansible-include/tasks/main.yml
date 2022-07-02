@@ -1,0 +1,6 @@
+---
+ - set_fact:
+    name1: 'robinhhli'
+ 
+ - set_fact:
+    age1: 22

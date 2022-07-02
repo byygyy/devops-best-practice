@@ -1,0 +1,13 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: robin
+  vars:
+    env_name_alias: cn
+    hosts_group: localhost
+
+  roles:
+    - ansible-include
+
+- name: import the playbook
+  import_playbook: playbooks/subplay.yml

@@ -1,0 +1,43 @@
+###podman-container1.service###
+[Unit]
+Description=Podman container1
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman start -a nginx1
+ExecStop=/usr/bin/podman stop -t 10 nginx1
+
+[Install]
+WantedBy=multi-user.target
+
+
+###podman-container2.service###
+[Unit]
+Description=Podman container2
+After=network.target
+After=network-online.target
+After=podman-container1.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman start -a  nginx-hexo1
+ExecStop=/usr/bin/podman stop -t 20 nginx-hexo1
+
+[Install]
+WantedBy=multi-user.target
+
+
+###podman-container3.service###
+[Unit]
+Description=Podman container3
+After=network.target
+After=network-online.target
+After=podman-container2.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/podman start -a docker-hexo2
+ExecStop=/usr/bin/podman stop -t 22 docker-hexo2
+
+[Install]
+WantedBy=multi-user.target

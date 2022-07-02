@@ -1,0 +1,35 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  become: yes
+  become_method: sudo
+  become_user: root  
+
+  vars:
+    ansible_ssh_user: robin
+    name1: root
+    hosts_group: "localhost"
+
+  tasks:
+    - name: run a shell command
+      shell: "sleep 2;echo 'hello world';sleep 3;echo 'nihao zhongguo';exit 1;sleep 100"
+      async: 50
+      poll: 5
+      register: rst1
+      ignore_errors: true
+
+    - name: echo rst1 as shell result
+      debug:
+        msg: "{{ rst1 }}"
+
+    - name: run a shell command2
+      shell: "sleep 2;echo 'hello world';sleep 3;echo 'nihao zhongguo';exit 0;sleep 100"
+      async: 50
+      poll: 5
+      register: rst2
+      ignore_errors: true
+
+    - name: echo rst2 as shell result
+      debug:
+        msg: "{{ rst2 }}"
+

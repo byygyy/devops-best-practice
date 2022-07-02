@@ -1,0 +1,53 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    userss: []
+
+    #user1 is defined and user1==None
+    user1:
+    
+    #user2 is defined and user2!=None and user2!=''
+    user2: jason
+    
+    #user3 is defined and user3==''
+    user3: ''
+
+  tasks:
+    - name: define a var1
+      shell: "whoami"
+      register: whoami
+      tags:
+        - var1
+        - all
+
+    - debug:
+        msg: "whoami: {{ whoami }}"
+      tags:
+        - var1
+        - all
+
+
+    - debug:
+        msg: "user2 is {{ user2 }}"
+      tags: 
+        - var2
+        - all
+    
+    - debug:
+        msg: "user3 is {{ user3 }}"
+      tags:
+        - var3
+        - all
+

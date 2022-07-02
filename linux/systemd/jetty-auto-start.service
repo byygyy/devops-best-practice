@@ -1,0 +1,12 @@
+## file name should jetty.service
+[Unit]
+Description=jetty
+After=multi-user.target
+After=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/sudo -i -u java_user /bin/bash /apps/scripts/startJetty
+ExecStop=/usr/bin/sudo -i -u java_user /bin/bash /apps/scripts/stopJetty
+[Install]
+WantedBy=multi-user.target

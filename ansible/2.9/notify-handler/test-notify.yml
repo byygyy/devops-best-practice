@@ -1,0 +1,41 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  become: yes
+  become_user: root
+  become_method: sudo
+  vars:
+    ansible_ssh_user: robin
+    name1: robin
+    hosts_group: "gcp"
+    age1: 21
+
+  tasks:
+    - name: create a file
+      file:
+        path: /home/robin/test1
+        state: directory
+      notify: 
+        - show create result
+    
+    - name: echo hello world
+      debug:
+        msg: "hello world"
+      changed_when: name1=='robin' #当符合某一个条件的时候，标记该任务已变化，从而可以触发notify调用的haldlers
+      register: hello
+      notify:
+        - show result when hello
+    
+    - name: get the current hello.changed value
+      debug:
+        msg: "hello.changed value is {{ hello.changed }}"
+      when: hello.changed == True 
+ 
+  handlers:
+    - name: show create result
+      debug:
+        msg: "file copyed"
+    
+    - name: show result when hello
+      debug:
+        msg: "I am ansible scripts"

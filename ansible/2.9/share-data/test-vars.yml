@@ -1,0 +1,20 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: localhost
+
+  tasks:
+    - name: show the list name1
+      debug: 
+        msg: "{{ name1 }}"
+    
+    - set_fact:
+        name1: "{{ name1 }}"
+
+    - name: define name3 by register
+      shell: "echo leo"
+      register: name3
+

@@ -1,0 +1,17 @@
+---
+
+- hosts: 127.0.0.1
+  remote_user: root
+  vars:
+    name1: robin
+    name2: jason
+
+  tasks:
+    - name: test the shell
+      shell: 'echo hello'
+      register: echo_result
+
+    - name: print the echo_result
+      debug: "echo {{echo_result}}"
+      when: name is undefined and name2 != 'robin' and name2 == 'jason'
+      

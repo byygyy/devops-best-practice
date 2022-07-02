@@ -1,0 +1,72 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    hosts_group: localhost
+    caasname: test
+    list1: ["robin","jason","joe"]  
+    list2: [21,22,23]
+    list3: [false,true,true]
+    lines1: 'hello\nworld'
+  tasks:
+    #遍历每个list，并且展开list的元素
+    - name: loop every items of every list
+      debug:
+        msg: "{{ item }}"
+      with_items: 
+        - "{{ list1 }}"
+        - "{{ list2 }}"
+    
+    #遍历每个list，不展开list中的元素
+    - name: loop every list as items
+      debug:
+        msg: "{{ item }}"
+      with_list:
+        - "{{ list1 }}"
+        - "{{ list2 }}"
+
+    #list1和list对其合并,每次分别从每个list拿出一个item
+    - name: loop list1 with list2
+      debug:
+        msg: "{{ item[0] }} {{ item[1] }}"
+      with_together:
+        - "{{ list1 }}"
+        - "{{ list2 }}"
+
+    #list1和list2嵌套循环，每个list中的元素分别与另外一个list元素组合一次
+    - name: loop list1 with every list2
+      debug:
+        msg: "{{ item }}"
+      with_nested:
+        - "{{ list1 }}"
+        - "{{ list2 }}"
+
+    #遍历一个字典
+    - name: loop a dict
+      debug:
+        msg: "{{ item.key }} {{ item.value }}"
+      with_dict: {"name":"robin","age":22}
+
+    #遍历每一行
+    - name: loop every lines
+      debug: 
+        msg: "{{ item }}"
+      with_lines: 
+         - "echo -en 'hello\nworld'"
+         - "echo -en '{{ lines1 }}'"
+
+    #遍历文件夹下的每个文件
+    - name: loop every file_name
+      debug: 
+        msg: "{{ item }}"
+      with_fileglob: 
+        - /appvol/*
+    
+    #遍历并显示第一个找到的文件
+    - name: loop and show first found file
+      debug:
+         msg: "{{ item }}"
+      with_first_found:
+         - /appvol/txt.txt
+         - /appvol/11.txt

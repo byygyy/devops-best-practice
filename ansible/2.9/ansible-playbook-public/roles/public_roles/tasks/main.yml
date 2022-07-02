@@ -1,0 +1,6 @@
+---
+
+- name: public task in roles named 'test the shell'
+  debug:
+    msg:  "public roles"
+

@@ -1,0 +1,36 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+
+  tasks:
+    - name: delete a empty folder1
+      file:
+        path: /apps/ansible-test/folder1
+        state: absent  
+
+    - name: delete a non empty folder2 which have somefiles
+      file:
+        path: /apps/ansible-test/folder2
+        state: absent
+
+    - name: list files below folder3
+      shell: ls  /apps/ansible-test/folder3/
+      register: files_list      
+     
+    - name: print the files_list
+      debug:
+        msg: "files_list is {{ files_list.stdout_lines  }}"
+
+    - name: delete files below folder3
+      file:
+        path:  "/apps/ansible-test/folder3/{{ item }}"
+        state: absent
+      with_items:
+        - "{{ files_list.stdout_lines  }}"

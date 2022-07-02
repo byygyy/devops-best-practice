@@ -1,0 +1,15 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+
+  tasks: 
+    # use set_fact
+    - set_fact:
+        random_number: "{{ 999999999999999999| random | to_uuid }}"
+    
+    - debug:
+        msg: "{{ random_number }}"

@@ -1,0 +1,113 @@
+---
+
+- hosts: "{{ hosts_group|default('all') }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    workspaces: [appvol,appvol02]
+    info1: [ {"workspace":appvol,"instance":JBD1} ]
+    info2: [ {"workspace":appvol02,"instance":JBD2} ]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    instances: ["instance1","instance2"]
+    listOfInstances: []
+
+  tasks:
+   - name: get the workspaces
+     shell: "ls /|grep appvol|cat"
+     register: workspaces
+
+   - name: define workspaces to fact
+     set_fact:
+       workspaces: "echo -en '{{ workspaces.stdout }}'"
+
+   - debug:
+       msg: "{{ workspaces }}"
+
+   - name: get the listOfInstance
+     shell: "cat /{{ item }}/t360/listOfInstance|awk -F '=' '{print \"{{item}}\", $2}'"
+     with_lines: "{{ workspaces }}"
+     register: listOfInstance
+
+   - debug:
+       msg: "{{ listOfInstance.results }}"
+
+   - name: define listOfInstances to fact
+     set_fact:
+       listOfInstances: "{{listOfInstances +item.stdout_lines}}"
+     with_list: "{{ listOfInstance.results }}"
+
+   - name: show the listOfInstances
+     debug:
+      msg: "{{item}}"
+     with_list: "{{ listOfInstances }}"
+
+   - name: loop with multiple list by with_nested 1st
+     debug:
+       msg: "item is {{item}}, workspace is {{ item[1].split()[0] }}, instance name is {{ item[1].split()[1] }}:before {{ item[0].before }} after {{ item[0].after }}"
+     with_nested:
+        -
+         - {'before':name=,'after':name=robin}
+         - {'before':port=,'after':port=11}
+         - {'before':ip=,'after':ip=11.11.11.11}
+        - "{{ listOfInstances }}"
+    
+   - name: loop with multiple list by with_nested  2st
+     debug:
+       msg: "item is {{item}}, workspace is {{ item[1].split()[0] }}, instance name is {{ item[1].split()[1] }}:before {{ item[0].before }} after {{ item[0].after }}"
+     with_nested:
+        -
+         - {'before':name=,'after':name=robin}
+         - {'before':port=,'after':port=11}
+         - {'before':ip=,'after':ip=11.11.11.11}
+        - 
+         - "appvol JBD1"
+         - "appvol JBD2"
+   
+   - name: loop with mutiple list by with_list
+     debug:
+       msg: "item is {{ item }}, item[0] is  {{ item[0] }}, item[1] is {{ item[1] }}"
+     with_list:
+         - 
+          - instance1
+          - instance2
+         - 
+          - instance3
+          - instance4
+   
+   - name: loop with mutiple list by with_item
+     debug:
+       msg: "item is {{ item }}, item[0] is  {{ item[0] }}, item[1] is {{ item[1] }}"
+     with_items:
+         -
+          - instance1
+          - instance2
+         -
+          - instance3
+          - instance4
+   
+   - name: loop with mutiple list by with_lines 1st
+     debug:
+       msg: "item is {{item }}"
+     with_lines:
+       - "echo -en 'appvol\nappvol02'"
+       - "echo -en 'JBD1\nJBD2'"
+
+   - name: loop with mutiple list by with_lines 2st
+     debug:
+       msg: "item is {{ item }}"
+     with_lines:
+       - 
+        - "echo -en 'appvol\nappvol02'"
+        - "echo -en 'appvol03\nappvol04'"
+       -
+        - "echo -en 'JBD1\nJBD2'"
+        - "echo -en 'JBD3\nJBD4'"
+   
+   

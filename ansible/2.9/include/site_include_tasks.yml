@@ -1,0 +1,16 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    env_name_alias: cn
+
+  tasks:
+    - set_fact:
+       name1: 'robinhhli1'
+
+    - set_fact:
+        age1: 23
+
+    - name: include the tasks
+      include_tasks: ansible-import-subtasks.yml

@@ -1,0 +1,13 @@
+---
+
+- hosts: 127.0.0.1
+  vars:
+    date_time: "{{ ansible_date_time.date }}_{{ansible_date_time.time }}"
+  
+  roles: 
+    - install-java
+
+- hosts: localhost
+  
+  roles:
+    - install-nodejs

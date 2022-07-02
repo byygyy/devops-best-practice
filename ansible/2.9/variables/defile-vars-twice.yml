@@ -1,0 +1,48 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+
+  tasks: 
+    #use register
+    #经过测试，第二次即使条件不满足，var1的注册的动作也会执行。第二次注册的结果会覆盖第一次注册的。
+    #因此，对于这种场景，目前能想到的每次注册变量使用不同的变量名。
+    - name: define a var1 by register
+      shell: "echo robin"
+      register: var1
+      when: name1 == 'robin'
+    
+    - debug:
+        var: var1
+
+    - name: define a var1 by register
+      shell: "echo joe"
+      register: var1
+      when: name1 == 'joe'    
+    
+    - debug:
+        var: var1
+
+    - debug:
+        msg: "{{ var1 }}"
+    
+    # use set_fact
+    - name: define a var2 by set_fact
+      set_fact:
+        var2: "jason"
+    
+    - debug:
+        var: var2
+
+    - name: define a var2 by set_fact
+      set_fact:
+        var2: "jack"
+
+    - debug:
+        var: var2
+
+    - debug:
+        msg: "{{ var2 }}"

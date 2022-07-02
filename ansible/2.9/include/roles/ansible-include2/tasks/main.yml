@@ -1,0 +1,6 @@
+---
+ - debug:
+     msg: "name1 {{ name1}}"
+ 
+ - debug:
+     msg: "age1 {{ age1 }}"

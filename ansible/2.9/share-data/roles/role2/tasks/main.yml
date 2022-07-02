@@ -1,0 +1,11 @@
+---
+
+- name: show  name1 defined in another playbook
+  debug:
+    msg: "name1 is {{ name1 }}"
+
+- name: show  name3 defined in another playbook
+  debug:
+    msg: "name3 is {{ name3.stdout }}"
+
+

@@ -1,0 +1,34 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  become: yes
+  become_method: sudo
+  become_user: root  
+
+  vars:
+    ansible_ssh_user: robin
+    name1: root
+    hosts_group: "localhost"
+
+  tasks:
+    # if we use & at the end of shell command, will not get the rc return code
+    - name: run a shell command1
+      shell: "sh test-async3.sh >> log.log &"
+      async: 50
+      poll: 0
+      register: rst1
+
+    - name: echo rst1 as shell result
+      debug:
+        msg: "{{ rst1 }}"
+
+    - name: 'get the job and check status'
+      async_status: jid={{ rst1.ansible_job_id }}
+      register: job_result
+      until: job_result.finished
+      retries: 50
+
+    - name: echo the job_result
+      debug:
+        msg: "{{ job_result }}"
+

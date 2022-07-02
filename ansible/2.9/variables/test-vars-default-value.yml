@@ -1,0 +1,16 @@
+---
+
+- hosts: 127.0.0.1 
+  remote_user: robin
+  vars:
+      name: robin
+      #first way to upgrade in default remote_tmp settings
+      ansible_remote_tmp: /tmp/.ansible/tmp3
+
+      #second way is override it by -e
+      #ansible-playbook test-vars-default-value.yml -e "ansible_remote_tmp=/tmp/.ansible/tmp4"
+
+  tasks:
+    - name: show the name
+      debug:
+         msg: "{{ name }}"

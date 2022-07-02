@@ -1,0 +1,28 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    hosts_group: "localhost"
+
+  tasks:
+     - name: run scripts
+       command: python dynamic_investory.py --list
+       register: hostlist
+
+
+     - debug:
+         var: hostlist
+     
+     - set_fact:
+         host_list: "{{ hostlist.stdout }}"
+
+     - debug:
+         var: host_list
+
+
+     - add_host:
+        name: '{{ item.key }}'
+        groups: "{{ item.value.hosts }}"
+       with_dict: "{{ host_list }}"
+    

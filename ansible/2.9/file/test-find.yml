@@ -1,0 +1,22 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: robin
+  vars:
+    name1: robin
+    hosts_group: "gcp.lhh.pub"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+
+  tasks:
+    - name: find files blow application
+      find:
+        path: /apps/application/
+        recurse: yes
+      register: file_list
+   
+    - name: show the file list
+      debug:
+        msg: "show the file list: {{ file_list.files.path }}"
+

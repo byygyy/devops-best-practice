@@ -1,0 +1,8 @@
+---
+
+- hosts: "{{ hosts_group|default('lhh.pub') }}"
+  remote_user: root
+
+  roles:
+    - role1
+    - role2

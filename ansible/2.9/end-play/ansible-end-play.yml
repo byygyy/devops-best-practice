@@ -1,0 +1,17 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    env_name: abc
+
+  tasks:
+    - name: check the input
+      debug:
+        msg: "nev_name incorrect"
+      when: ex_env_name not in ['zhonguo','cn']
+
+    - meta: end_play
+      when: ex_env_name not in ['zhonguo','cn']

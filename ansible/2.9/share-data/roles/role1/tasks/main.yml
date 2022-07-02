@@ -1,0 +1,9 @@
+---
+
+- set_fact:
+   name1: "robin"
+
+- name: define name3 by register
+  shell: "echo leo"
+  register: name3
+

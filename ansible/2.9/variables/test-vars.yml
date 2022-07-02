@@ -1,0 +1,122 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+
+  tasks:
+    - name: show the list names2
+      debug: 
+        msg: "{{ item }}"
+      with_items: "{{ names2 }}"
+
+    - name: def age1 as int
+      debug:
+        msg: 'age1 is {{ age1 }} as int'
+      when: age1 == 21
+
+    - name: def age2 as string
+      debug:
+        msg: "age2 is {{ age2 }} as string"
+      when: age2 == '21'
+
+    - name: def age1 as int to string
+      debug:
+        msg: "age1 is {{ age1 }}"
+      when: age1|string == '21'
+
+    - name: def age2 as string to int
+      debug:
+        msg: "age2 is {{ age2 }}"
+      when: age2|int == 21 and age2|int >= 18
+
+    - name: change to string and compare age1 and age2
+      debug:
+        msg: "{{ age1}} {{ age2 }}"
+      when: age1|string + age2|string == '2121'
+
+    - name: change to int and compare age1 and age2
+      debug:
+        msg: "{{ age1}} {{ age2 }}"
+      when: age1|int - age2|int == 0
+
+    - name: show the married or not
+      debug:
+        msg: "married is {{ married }}"
+      when: married|string == 'True'
+ 
+    - name: show the married2 or not
+      debug:
+        msg: "married2 is {{ married2 }}"
+      when: married2|string == 'True'
+
+    - name: show the married3 or not
+      debug:
+        msg: "married3 is {{ married3 }}"
+      when: married3|string == 'true'
+
+    
+    - name: change the age1 value
+      shell: "echo 220"
+      register: age1
+     
+    - name: echo age1
+      debug:
+        msg: "age1 is {{ age1.stdout }}"
+      when: age1.stdout is defined
+     
+    - name: get the names from listofInstance
+      shell: "cat listofInstance|awk -F '=' '{ print $2 }'"
+      register: names
+
+
+    - name: show the items of names way1
+      debug:
+        msg: "{{ item }}"
+      with_lines: "echo -e '{{ names.stdout }}'"
+
+    - name: show the items of names way2
+      debug:
+        msg: "{{ item }}"
+      with_lines: "cat listofInstance|awk -F '=' '{ print $2 }'"
+
+    - name: show the items of names way3
+      debug:
+        msg: "{{ item }}"
+      with_lines: "echo -e 'robin\njoseph'"
+
+    - name: show the items of name way4
+      debug:
+        msg: "{{ item }}"
+      with_lines: "cat listofInstance2"
+
+    - name: show the items of name way5
+      debug:
+        msg: "{{ item }}"
+      with_items: [robin,ivy]
+    
+    - name: show the items of name way6
+      debug:
+        msg: "{{ item }}"
+      with_sequence: start=1 end=32
+    
+    - name: show a log1
+      debug:
+        msg: "{{ item }}"
+      with_lines: "echo -e '{{ log1 }}'"
+
+    - name: show the items from DB
+      debug:
+        msg: "{{ item }}"
+      with_lines: "echo -en 'name phone addr\nrobin 13712345678 CN\ntom 13812345678 HK\n'|awk  'NR>1 {print $1}'"
+    

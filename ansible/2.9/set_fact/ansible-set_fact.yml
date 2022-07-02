@@ -1,0 +1,66 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    hosts_group: "localhost"
+    env_name_alias: "cn"
+  tasks:
+    - set_fact:
+        env_name: 'china'
+      when: env_name_alias=='zhonguo'
+
+    - set_fact:
+        env_name: 'china'
+      when: env_name_alias=='cn'
+
+    - set_fact:
+        env_name: "{{ env_name_alias }}"
+      when: env_name_alias not in ['zhonguo','cn']
+    
+    - debug:
+        msg: "env_name is {{ env_name }}"
+    
+    - debug:
+        msg: "env_name_alias is {{ env_name_alias }}"
+    
+    #use set_fact to define dict or list
+    - name: define a dict named dict1 by set_fact
+      set_fact:
+        dict1: {"parameter":[{"name":"robin","age":22},{"name":"tom","age":21}]}
+
+    - name: print dict1
+      debug:
+        msg: "{{ dict1 }}"
+
+    - name: define a list named list1 by set_fact
+      set_fact:
+        list1: [true,false]
+
+    - name: print list1
+      debug:
+        msg: "{{ list1 }}"
+
+    - name: print dict1.parameter every item with list every item
+      debug:
+        msg: "{{ item[0].name }} {{ item[0].age}} {{ item[1] }}"
+      with_together:
+        - "{{ dict1.parameter }}"
+        - "{{ list1 }}"
+      when: "item[1]==true"
+
+    - name: merge list1 and  list2
+      set_fact:
+         list1_1: "{{ list1 + list1 }}"
+       
+    - name: show list1_1
+      debug:
+        msg: "{{ list1_1 }}"
+
+    - name: add new item for dict1
+      set_fact:
+         dict1_1: "{{ dict1|default({})|combine({'date': '1'}) }}"
+
+    - name: show dict1_1
+      debug:
+        msg: "{{ dict1_1 }}"

@@ -1,0 +1,10 @@
+---
+
+- name: show the name1
+  debug: 
+    msg: "{{ name1 }}"
+
+- name: show the age1
+  debug:
+     msg: "{{ age1 }}"
+

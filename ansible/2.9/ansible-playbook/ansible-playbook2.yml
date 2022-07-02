@@ -1,0 +1,20 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    name2: jason
+    hosts_group: "{{ env }}-web-server"
+
+  tasks:
+    - name: test the shell
+      shell: 'echo hello'
+      register: echo_result
+      when: env == 'dev1' or env == 'dev2'
+
+    - name: print the echo_result
+      debug:
+        msg:  "{{ env }} with {{ date1 }}"
+      when: env == 'dev1' or env == 'dev2'
+      

@@ -1,0 +1,1 @@
+30 23 * * * /usr/bin/sudo -i -u java_user /bin/bash /apps/scritps/startCurator.sh

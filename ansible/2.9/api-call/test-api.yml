@@ -1,0 +1,30 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+
+  tasks:
+    - name: call jenkins pipeline 1st way
+      shell: "curl -X POST http://192.168.3.21:8080/job/lhh_pub/job/hello_world/buildWithParameters --user robin:11aa405306748aeaac00767d9837a051c2 --data env_name=DEV2"
+
+    - name: call jenkins pipeline 2st way
+      uri:
+        url: 'http://192.168.3.21:8080/job/lhh_pub/job/hello_world/buildWithParameters'
+        user: robin
+        password: 11aa405306748aeaac00767d9837a051c2
+        force_basic_auth: yes
+        method: POST
+        status_code: 201
+        body: "env_name=DEV6"
+

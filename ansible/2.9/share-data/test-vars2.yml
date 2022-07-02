@@ -1,0 +1,24 @@
+---
+- name: import another playbook
+  import_playbook: test-vars.yml
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name2: jasonli
+    hosts_group: localhost
+
+  tasks:
+    - name: show the list name2
+      debug: 
+        msg: "{{ name2 }}"
+
+    - name: show  name1 defined in another playbook
+      debug:
+        msg: "name1 is {{ name1 }}"
+
+    - name: show  name3 defined in another playbook
+      debug:
+        msg: "name3 is {{ name3.stdout }}"
+
+

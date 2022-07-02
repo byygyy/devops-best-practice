@@ -1,0 +1,63 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    hosts_group: "localhost"
+    list1: ["hello","world"]
+    dict1: {"paramters":[{"name":robin,"age":22},{"name":tom,"age":21}]}
+
+  tasks:
+    #define list2 and dict2 by set_fact
+    - set_fact:
+        list2: "{{ list1 }}"
+
+    - set_fact:
+        dict2: "{{ dict1 }}"
+
+    - debug:
+        msg: "{{ list2 }}"
+    
+    - debug:
+        msg: "{{ dict2  }}" 
+
+    #loop show list2 and dict2
+    - name: loop list2
+      debug: 
+        msg: "{{ item }}"
+      with_list: "{{ list2 }}"
+
+    - name: loop dict2
+      debug:
+        msg: "name is {{ item.name }}, age is {{ item.age }}"
+      with_items: "{{ dict2.paramters }}"
+
+    #got result from py and register to list3 and dict3
+    - name: define list3 by register
+      shell: "python got_result_list.py"
+      register: list3
+   
+    - set_fact:
+        list3_3: "{{ list3.stdout }}"
+ 
+    - name: loop list3
+      debug:
+        msg: "{{ item }}"
+      with_items: "{{ list3_3 }}"
+
+    - name: define dict3 by register
+      shell: "python got_result_dict.py"
+      register: dict3
+    
+    # if we did not use set_fact, ansible will think dict3.stdout is a string not dict
+    # if we use set_fact, ansible will format dict3.stdout to a dict
+    - set_fact:
+        dict3_3: "{{ dict3.stdout }}"
+    
+    - debug:
+        msg: "{{ dict3_3 }}"
+
+    - name: loop dict3
+      debug:
+        msg: "name is {{ item.name }}, age is {{item.age }}"
+      with_items: "{{ dict3_3.paramters  }}"

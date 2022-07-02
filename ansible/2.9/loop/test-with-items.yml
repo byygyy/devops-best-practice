@@ -1,0 +1,36 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: root
+  vars:
+    name1: robin
+    hosts_group: "localhost"
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    ages: [10,20,30]
+
+  tasks:
+    - name: def age1 as int
+      debug:
+        msg: 'age1 is {{ item }} as int'
+      with_items:
+         - 21
+         - 22
+    
+    - name: def age1 as int
+      debug:
+        msg: 'age1 is {{ item }} as int'
+      with_items: "{{ ages }}"
+     
+    - name: modify some lines
+      lineinfile:
+        path: test.txt
+        insertafter: 'SELINUX=enforcing'
+        regexp: '^\nhello\nworld'
+        line: "\nhello\nworld"

@@ -1,0 +1,45 @@
+---
+
+- name: test the shell
+  shell: 'echo hello'
+  register: echo_result
+  when: env == 'dev1' or env == 'dev2'
+
+- name: print the echo_result
+  debug:
+    msg:  "{{ name1 }} {{ name2 }} {{ env }} with {{ date1 }}"
+  when: env == 'dev1' or env == 'dev2'
+
+- name: get the current datetime1
+  debug:
+   msg:  "date_time {{ date_time }}"
+
+- name: sleep 65 second
+  shell: 'sleep 60'
+
+- name: get the current datetime2
+  debug:
+   msg:  "{{ ansible_date_time.date }}_{{ansible_date_time.time }}"
+
+
+- name: test the shell
+  shell: 'echo hello'
+  register: echo_result
+  when: env == 'dev1' or env == 'dev2'
+
+- name: print the echo_result
+  debug:
+   msg:  "{{ name1 }} {{ name2 }} {{ env }} with {{ date1 }}"
+  when: env == 'dev1' or env == 'dev2'
+
+- name: get the current datetime1
+  debug:
+   msg:  "{{ ansible_date_time.date }}_{{ansible_date_time.time }}"
+
+- name: sleep 65 second
+  shell: 'sleep 60'
+
+- name: get the current datetime2
+  debug:
+   msg:  "{{ ansible_date_time.date }}_{{ansible_date_time.time }}"
+

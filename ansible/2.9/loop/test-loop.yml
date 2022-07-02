@@ -1,0 +1,129 @@
+---
+
+- hosts: "{{ hosts_group|default('all') }}"
+  remote_user: vagrant
+  vars:
+    name1: robin
+    date1: 2020-02-02
+    age1: 21
+    age2: '21'
+    married: True
+    married2: true
+    married3: 'true'
+    names2: [robin,joseph]
+    workspaces: [appvol,appvol02]
+    info1: [ {"workspace":appvol,"instance":JBD1} ]
+    info2: [ {"workspace":appvol02,"instance":JBD2} ]
+    log1: 'hello\nworld\nihao\nzhongguo'
+    instances: ["instance1","instance2"]
+
+  tasks:
+    - name: loop with multiple list
+      shell: "echo {{ item[0].name }}"
+      with_nested:
+        -
+         - {'name':robin,'age':18}
+         - {'name':lily,'age':18}
+         - {'name':gil,'age':18}
+        -
+         - "appvol JBD1"
+         - "appvol02 JBD2"
+         
+
+    - name: define a lable for loop
+      shell: "echo {{ item }}"
+      with_items:
+        - {'name':robin,'age':18}
+        - {'name':lily,'age':18}
+        - {'name':gil,'age':18}
+      loop_control:
+         label: "{{ item.name }}"
+
+    - name: list many dict
+      debug:
+        msg: "{{ user.name }}"
+      with_items:
+        - {'name':robin}
+        - {'name':lily}
+        - {'name':gil}
+      loop_control:
+        loop_var: user     
+
+    - name: item.0 returns from the 'a' list, item.1 returns from the '1' list
+      debug:
+        msg: "{{ item.0 }} and {{ item.2 }}"
+      with_together:
+       - ['a', 'b', 'c', 'd']
+       - [1, 2, 3, 4] 
+       - ['A','B','C','D']
+
+    - name: use with_nested exampl
+      debug: 
+        msg: "{{ item }}"
+      with_nested:
+        - [hello,world]
+        - [nihao,shijie]
+
+    - name: list a dict 1st
+      debug:
+        msg: "{{ item.key }} {{item.value}}"
+      with_dict: {'name':robin,'age':22}
+          
+ 
+    - name: list a shell command result
+      debug:
+        msg: "{{ item }}"
+      with_lines: "echo -en 'hello\nworld'"
+
+    - name: list a shell command result2
+      debug:
+        msg: "{{ item }}"
+      with_lines: "ls /"
+
+    - debug:
+        msg: "{{ item }}"
+      with_list:
+        - [instance1,instance3]
+        - [instance2,instance4]
+
+    - debug:
+        msg: "{{ item }}"
+      with_list:
+        - 
+          - instance1
+          - instance3
+        - 
+          - instance2
+          - instance4
+
+    - debug:
+        msg: "{{ item }}"
+      with_items:
+        - [instance1,instance3]
+        - [instance2,instance4]
+
+    - name: get the instance name 1st way
+      shell: "echo {{ item }}"
+      with_items:
+        - instance1
+        - instance2
+      register: instances1
+
+    - name: get the instance name 2st way
+      shell: "echo {{ item }}"
+      with_items: ["instance1","instance2"]
+      register: instances2
+
+    - name: get the instance name 3st way
+      shell: "echo {{ item }}"
+      with_items: "{{ instances }}"
+      register: instances3   
+ 
+    - debug:
+       msg: "{{ instances1 }}"
+    
+    - debug:
+       msg: "{{ instances2 }}"
+
+    - debug:
+       msg: "{{ instances3 }}"

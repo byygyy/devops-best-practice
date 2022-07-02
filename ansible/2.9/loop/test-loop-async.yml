@@ -1,0 +1,52 @@
+---
+
+- hosts: "{{ hosts_group }}"
+  remote_user: vagrant
+  vars:
+    caasname: xxx
+    listOfInstances: []
+  
+  tasks:
+   - name: get the workspaces
+     shell: "ls /|grep appvol|cat" 
+     register: workspaces
+    
+   - name: define workspaces to fact
+     set_fact:
+       workspaces: "echo -en '{{ workspaces.stdout }}'"
+    
+   - debug:
+       msg: "{{ workspaces }}"
+
+   - name: get the listOfInstance
+     shell: "cat /{{ item }}/t360/listOfInstance|awk -F '=' '{print \"{{item}}\", $2}'"
+     with_lines: "{{ workspaces }}"
+     register: listOfInstance
+   
+   - debug:
+       msg: "{{ listOfInstance.results }}"  
+ 
+   - name: define listOfInstances to fact
+     set_fact:
+       listOfInstances: "{{listOfInstances +item.stdout_lines}}"
+     with_list: "{{ listOfInstance.results }}"
+   
+   - name: show the listOfInstances
+     debug:
+      msg: "{{item}}"
+     with_list: "{{ listOfInstances }}"
+
+   - name: do some configuration by lineinfile
+     lineinfile:
+       path: "/{{item.split()[0]}}/t360/{{item.split()[1]}}/tps.properties"
+       state: present
+       regexp: "^caasname="
+       line: "caasname={{ caasname }}"
+       backup: no
+       backrefs: yes
+     with_list: "{{ listOfInstances }}"
+
+   - name: show the deployment scripts
+     debug:
+       msg:  "/{{item.split()[0]}}/t360/deploy --instanceName={{item.split()[1]}}"
+     with_list: "{{ listOfInstances }}" 

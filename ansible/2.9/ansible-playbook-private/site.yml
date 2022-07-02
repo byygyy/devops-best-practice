@@ -1,0 +1,10 @@
+---
+
+- hosts: 127.0.0.1
+  remote_user: root
+  vars:
+    name1: robin
+    name2: jason
+
+  roles:
+    - private_roles 
